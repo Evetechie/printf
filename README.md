@@ -1,4 +1,4 @@
-**Printf Group Project**<br>
-##authors
-*Elijah chino
-*Evelyn Muema
+**Printf Group Project**
+Authors ©
+Elijah chino
+Evelyn Muema

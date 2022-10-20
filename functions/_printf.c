@@ -47,7 +47,7 @@ int _printf(const char *format, ...)
 	case 'u':
 		count += print_unsigned(va_arg(args, unsigned int));
 		break;
-	default;
+	default:
 		break;
 	}
 	i += 2;

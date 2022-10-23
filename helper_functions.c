@@ -6,6 +6,8 @@
  *
  * @s: string to reverse
  * Return: A pointer to a character
+ * Athors: Elijah chino and Evelyn Muema
+
  */
 char *rev_string(char *s)
 {

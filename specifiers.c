@@ -1,73 +1,142 @@
 #include "main.h"
 
 /**
- * print_char - Prints character
- * @list: list of arguments
- * Return: Will return the amount of characters printed.
+ * get_specifier - finds the format function
+ * @s: string of the format
+ * Return: the number of bytes printed
  */
-int print_char(va_list list)
+
+int (*get_specifier(char *s))(va_list ap, params_t *params)
+
 {
-	_write_char(va_arg(list, int));
-	return (1);
+	specifier_t specifiers[] = {
+		{"c", print_char},
+		{"d", print_int},
+		{"i", print_int},
+		{"s", print_string},
+		{"%", print_percent},
+		{"b", print_binary},
+		{"o", print_octal},
+		{"u", print_unsigned},
+		{"x", print_hex},
+		{"X", print_HEX},
+		{"p", print_address},
+		{"S", print_S},
+		{"r", print_rev},
+		{"R", print_rot13},
+		{NULL, NULL}
+	};
+
+	int k = 0;
+
+	while (specifiers[k].specifier)
+	{
+		if (*s == specifiers[k].specifier[0])
+		{
+			return (specifiers[k].f);
+		}
+		k++;
+	}
+	return (NULL);
 }
 
 /**
- * print_string - Prints a string
- * @list: list of arguments
- * Return: Will return the amount of characters printed.
+ * get_print_func - finds the format function
+ * @s: string of the format
+ * @ap: argument pointer
+ * @params: the parameters struct
+ * Return: the number of bytes printed
  */
-int print_string(va_list list)
-{
-	int i;
-	char *str;
 
-	str = va_arg(list, char *);
-	if (str == NULL)
-		str = "(null)";
-	for (i = 0; str[i] != '\0'; i++)
-		_write_char(str[i]);
-	return (i);
+int get_print_func(char *s, va_list ap, params_t *params)
+{
+	int (*f)(va_list, params_t *) = get_specifier(s);
+
+	if (f)
+		return (f(ap, params));
+	return (0);
 }
 
 /**
- * print_percent - Prints a percent symbol
- * @list: list of arguments
- * Return: Will return the amount of characters printed.
+ * get_flag - finds the flag functions
+ * @s: the format string
+ * @params: the parameters struct
+ * Return: if flag was valid
  */
-int print_percent(__attribute__((unused))va_list list)
+
+int get_flag(char *s, params_t *params)
+
 {
-	_write_char('%');
-	return (1);
+	int k = 0;
+
+	switch (*s)
+	{
+		case '+':
+			k = params->plus_flag = 1;
+			break;
+		case ' ':
+			k = params->space_flag = 1;
+			break;
+		case '#':
+			k = params->hashtag_flag = 1;
+			break;
+		case '-':
+			k = params->minus_flag = 1;
+			break;
+		case '0':
+			k = params->zero_flag = 1;
+			break;
+	}
+	return (k);
 }
 
 /**
- * print_integer - Prints an integer
- * @list: list of arguments
- * Return: Will return the amount of characters printed.
+ * get_modifier - finds the modifier function
+ * @s: string for format
+ * @params: parameter structure
+ * Return: if modifier was valid
  */
-int print_integer(va_list list)
-{
-	int num_length;
 
-	num_length = print_number(list);
-	return (num_length);
+int get_modifier(char *s, params_t *params)
+{
+	int k = 0;
+
+	switch (*s)
+	{
+		case 'h':
+			k = params->h_modifier = 1;
+			break;
+		case 'l':
+			k = params->l_modifier = 1;
+			break;
+	}
+	return (k);
 }
 
 /**
- * unsigned_integer - Prints Unsigned integers
- * @list: List of all of the argumets
- * Return: a count of the numbers
+ * get_width - gets the width from the format string
+ * @s: the format string
+ * @params: the parameters struct
+ * @ap: the argument pointer
+ * Return: new pointer
  */
-int unsigned_integer(va_list list)
+
+char *get_width(char *s, params_t *params, va_list ap)
+
+	/* should this function use char **s and modify the pointer? */
 {
-	unsigned int num;
+	int k = 0;
 
-	num = va_arg(list, unsigned int);
-
-	if (num == 0)
-		return (print_unsgined_number(num));
-
-	if (num < 1)
-		return (-1);
-	return (print_unsgined_number(num));
+	if (*s == '*')
+	{
+		k = va_arg(ap, int);
+		s++;
+	}
+	else
+	{
+		while (_isdigit(*s))
+			k = k * 10 + (*s++ - '0');
+	}
+	params->width = k;
+	return (s);
 }

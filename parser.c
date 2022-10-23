@@ -1,52 +1,130 @@
 #include "main.h"
 
 /**
- * parser - Receives the main string and all the necessary parameters to
- * print a formated string.
- * @format: A string containing all the desired characters.
- * @f_list: A list of all the posible functions.
- * @arg_list: A list containing all the argumentents passed to the program.
- * Return: A total count of the characters printed.
+ * _isdigit - checks if character is digit
+ * @c: the character to check
+ *
+ * Return: 1 if digit, 0 otherwise
  */
-int parser(const char *format, conver_t f_list[], va_list arg_list)
+int _isdigit(int c)
 {
-int i, j, r_val, printed_chars;
+	return (c >= '0' && c <= '9');
+}
 
-printed_chars = 0;
-for (i = 0; format[i] != '\0'; i++) /* Iterates through the main str*/
+/**
+ * _strlen - returns the length of a string
+ * @s: the string whose length to check
+ *
+ * Return: integer length of string
+ */
+int _strlen(char *s)
 {
-if (format[i] == '%') /*Checks for format specifiers*/
+	int i = 0;
+
+	while (*s++)
+		i++;
+	return (i);
+}
+
+/**
+ * print_number - prints a number with options
+ * @str: the base number as a string
+ * @params: the parameter struct
+ *
+ * Return: chars printed
+ */
+int print_number(char *str, params_t *params)
 {
-/*Iterates through struct to find the right func*/
-for (j = 0; f_list[j].sym != NULL; j++)
+	unsigned int i = _strlen(str);
+	int dot = (!params->unsign && *str == '-');
+
+	if (!params->precision && *str == '0' && !str[1])
+		str = "";
+	if (dot)
+	{
+		str++;
+		i--;
+	}
+	if (params->precision != UINT_MAX)
+		while (i++ < params->precision)
+			*--str = '0';
+	if (dot)
+		*--str = '-';
+
+	if (!params->minus_flag)
+		return (print_number_right_shift(str, params));
+	else
+		return (print_number_left_shift(str, params));
+}
+
+/**
+ * print_number_right_shift - prints a number with options
+ * @str: the base number as a string
+ * @params: the parameter struct
+ *
+ * Return: chars printed
+ */
+int print_number_right_shift(char *str, params_t *params)
 {
-if (format[i + 1] == f_list[j].sym[0])
+	unsigned int n = 0, dot, dot2, i = _strlen(str);
+	char cat_char = ' ';
+
+	if (params->zero_flag && !params->minus_flag)
+		cat_char = '0';
+	dot = dot2 = (!params->unsign && *str == '-');
+	if (dot && i < params->width && cat_char == '0' && !params->minus_flag)
+		str++;
+	else
+		dot = 0;
+	if ((params->plus_flag && !dot2) ||
+		(!params->plus_flag && params->space_flag && !dot2))
+		i++;
+	if (dot && cat_char == '0')
+		n += _putchar('-');
+	if (params->plus_flag && !dot2 && cat_char == '0' && !params->unsign)
+		n += _putchar('+');
+	else if (!params->plus_flag && params->space_flag && !dot2 &&
+		!params->unsign && params->zero_flag)
+		n += _putchar(' ');
+	while (i++ < params->width)
+		n += _putchar(cat_char);
+	if (dot && cat_char == ' ')
+		n += _putchar('-');
+	if (params->plus_flag && !dot2 && cat_char == ' ' && !params->unsign)
+		n += _putchar('+');
+	else if (!params->plus_flag && params->space_flag && !dot2 &&
+		!params->unsign && !params->zero_flag)
+		n += _putchar(' ');
+	n += _puts(str);
+	return (n);
+}
+
+/**
+ * print_number_left_shift - prints a number with options
+ * @str: the base number as a string
+ * @params: the parameter struct
+ *
+ * Return: characters printed
+ */
+int print_number_left_shift(char *str, params_t *params)
 {
-r_val = f_list[j].f(arg_list);
-if (r_val == -1)
-return (-1);
-printed_chars += r_val;
-break;
-}
-}
-if (f_list[j].sym == NULL && format[i + 1] != ' ')
-{
-if (format[i + 1] != '\0')
-{
-_write_char(format[i]);
-_write_char(format[i + 1]);
-printed_chars = printed_chars + 2;
-}
-else
-return (-1);
-}
-i = i + 1; /*Updating i to skip format symbols*/
-}
-else
-{
-_write_char(format[i]); /*call the write function*/
-printed_chars++;
-}
-}
-return (printed_chars);
+	unsigned int n = 0, dot, dot2, i = _strlen(str);
+	char cat_char = ' ';
+
+	if (params->zero_flag && !params->minus_flag)
+		cat_char = '0';
+	dot = dot2 = (!params->unsign && *str == '-');
+	if (dot && i < params->width && cat_char == '0' && !params->minus_flag)
+		str++;
+	else
+		dot = 0;
+
+	if (params->plus_flag && !dot2 && !params->unsign)
+		n += _putchar('+'), i++;
+	else if (params->space_flag && !dot2 && !params->unsign)
+		n += _putchar(' '), i++;
+	n += _puts(str);
+	while (i++ < params->width)
+		n += _putchar(cat_char);
+	return (n);
 }

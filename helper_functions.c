@@ -1,77 +1,79 @@
 #include "main.h"
-#include <stdio.h>
+
 /**
- * rev_string - reverses a string in place
+ * print_from_to - prints a range of char addresses
+ * @start: starting address
+ * @stop: stopping address
+ * @except: except address
  *
- * @s: string to reverse
- * Return: A pointer to a character
+ * Return: number bytes printed
  */
-char *rev_string(char *s)
+int print_from_to(char *start, char *stop, char *except)
 {
-	int len;
-	int head;
-	char tmp;
-	char *dest;
+	int sum = 0;
 
-	for (len = 0; s[len] != '\0'; len++)
-	{}
-
-	dest = malloc(sizeof(char) * len + 1);
-	if (dest == NULL)
-		return (NULL);
-
-	_memcpy(dest, s, len);
-	for (head = 0; head < len; head++, len--)
+	while (start <= stop)
 	{
-		tmp = dest[len - 1];
-		dest[len - 1] = dest[head];
-		dest[head] = tmp;
+		if (start != except)
+			sum += _putchar(*start);
+		start++;
 	}
-	return (dest);
+	return (sum);
 }
 
 /**
- * write_base - sends characters to be written on standard output
- * @str: String to parse
+ * print_rev - prints string in reverse
+ * @ap: string
+ * @params: the parameters struct
+ *
+ * Return: number bytes printed
  */
-void write_base(char *str)
+int print_rev(va_list ap, params_t *params)
 {
-	int i;
+	int length, sum = 0;
+	char *str = va_arg(ap, char *);
+	(void)params;
 
-	for (i = 0; str[i] != '\0'; i++)
-		_write_char(str[i]);
-}
-
-/**
- * base_len - Calculates the length for an octal number
- * @num: The number for which the length is being calculated
- * @base: Base to be calculated by
- * Return: An integer representing the length of a number
- */
-unsigned int base_len(unsigned int num, int base)
-{
-	unsigned int i;
-
-	for (i = 0; num > 0; i++)
+	if (str)
 	{
-		num = num / base;
+		for (length = 0; *str; str++)
+			length++;
+		str--;
+		for (; length > 0; length--, str--)
+			sum += _putchar(*str);
 	}
-	return (i);
+	return (sum);
 }
 
 /**
- * _memcpy - copy memory area
- * @dest: Destination for copying
- * @src: Source to copy from
- * @n: The number of bytes to copy
- * Return: The _memcpy() function returns a pointer to dest.
+ * print_rot13 - prints string in rot13
+ * @ap: string
+ * @params: the parameters struct
+ *
+ * Return: number bytes printed
  */
-char *_memcpy(char *dest, char *src, unsigned int n)
+int print_rot13(va_list ap, params_t *params)
 {
-	unsigned int i;
+	int k, ind;
+	int sum = 0;
+	char arr[] =
+		"NOPQRSTUVWXYZABCDEFGHIJKLM      nopqrstuvwxyzabcdefghijklm";
+	char *a = va_arg(ap, char *);
+	(void)params;
 
-	for (i = 0; i < n; i++)
-		dest[i] = src[i];
-	dest[i] = '\0';
-	return (dest);
+	k = 0;
+	ind = 0;
+	while (a[k])
+	{
+		if ((a[k] >= 'A' && a[k] <= 'Z')
+		    || (a[k] >= 'a' && a[k] <= 'z'))
+		{
+			ind = a[k] - 65;
+			sum += _putchar(arr[ind]);
+		}
+		else
+			sum += _putchar(a[k]);
+		k++;
+	}
+	return (sum);
 }

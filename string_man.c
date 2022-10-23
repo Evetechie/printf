@@ -1,55 +1,38 @@
 #include "main.h"
-/**
- * print_reversed - Calls a function to reverse and print a string
- * @arg: Argument passed to the function
- * Return: The amount of characters printed
- */
-int print_reversed(va_list arg)
-{
-	int len;
-	char *str;
-	char *ptr;
 
-	str = va_arg(arg, char *);
-	if (str == NULL)
-		return (-1);
-	ptr = rev_string(str);
-	if (ptr == NULL)
-		return (-1);
-	for (len = 0; ptr[len] != '\0'; len++)
-		_write_char(ptr[len]);
-	free(ptr);
-	return (len);
+/**
+ * _puts - prints a string with newline
+ * @str: the string to print
+ *
+ * Return:( str-a)
+ */
+int _puts(char *str)
+{
+	char *a = str;/*declaration of variables*/
+
+	while (*str)
+		_putchar(*str++);
+	return (str - a);
 }
 
 /**
- * rot13 - Converts string to rot13
- * @list: string to convert
- * Return: converted string
+ * _putchar - writes the character c to stdout
+ * @c: The character to print
+ *
+ * Return: On success 1.
+ * On error, -1 is returned, and error is set appropriately.
  */
-int rot13(va_list list)
+int _putchar(int c)
 {
-	int i;
-	int x;
-	char *str;
-	char s[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-	char u[] = "NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm";
+	static int i;
+	static char buf[OUTPUT_BUF_SIZE];
 
-	str = va_arg(list, char *);
-	if (str == NULL)
-		return (-1);
-	for (i = 0; str[i] != '\0'; i++)
+	if (c == BUF_FLUSH || i >= OUTPUT_BUF_SIZE)
 	{
-		for (x = 0; x <= 52; x++)
-		{
-			if (str[i] == s[x])
-			{
-				_write_char(u[x]);
-				break;
-			}
-		}
-		if (x == 53)
-			_write_char(str[i]);
+		write(1, buf, i);
+		i = 0;
 	}
-	return (i);
+	if (c != BUF_FLUSH)
+		buf[i++] = c;
+	return (1);
 }

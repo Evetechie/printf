@@ -3,8 +3,6 @@
  * print_char - Prints character
  * @list: list of arguments
  * Return: Will return the amount of characters printed.
- * Athors: Elijah chino and Evelyn Muema
-
  */
 int print_char(va_list list)
 {

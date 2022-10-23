@@ -1,13 +1,10 @@
 #include "main.h"
 #include <stdio.h>
-
 /**
  * rev_string - reverses a string in place
  *
  * @s: string to reverse
  * Return: A pointer to a character
- * Athors: Elijah chino and Evelyn Muema
-
  */
 char *rev_string(char *s)
 {

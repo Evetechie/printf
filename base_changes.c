@@ -1,13 +1,10 @@
 #include "main.h"
 #include <stdio.h>
 int hex_check(int, char);
-
 /**
  * print_binary - Converts a number from base 10 to binary
  * @list: List of arguments passed to this function
  * Return: The length of the number printed
- * Athors: Elijah chino and Evelyn Muema
-
  */
 int print_binary(va_list list)
 {

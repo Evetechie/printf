@@ -1,11 +1,8 @@
 #include "main.h"
-
 /**
  * print_number - prints a number send to this function
  * @args: List of arguments
  * Return: The number of arguments printed
- * Athors: Elijah chino and Evelyn Muema
-
  */
 int print_number(va_list args)
 {
@@ -66,3 +63,9 @@ int print_unsgined_number(unsigned int n)
 
 	return (len);
 }
+Footer
+© 2022 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
+

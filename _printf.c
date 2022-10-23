@@ -4,8 +4,6 @@
  * print a formated string
  * @format: A string containing all the desired characters
  * Return: A total count of the characters printed
- * Athors: Elijah chino and Evelyn Muema
-
  */
 int _printf(const char *format, ...)
 {

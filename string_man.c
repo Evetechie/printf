@@ -1,11 +1,8 @@
 #include "main.h"
-
 /**
  * print_reversed - Calls a function to reverse and print a string
  * @arg: Argument passed to the function
  * Return: The amount of characters printed
- * Athors: Elijah chino and Evelyn Muema
-
  */
 int print_reversed(va_list arg)
 {

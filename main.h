@@ -10,8 +10,6 @@
 *
 * @sym: The operator
 * @f: The function associated
-* Athors: Elijah chino and Evelyn Muema
-
 */
 struct convert
 {
